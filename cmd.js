@@ -1,7 +1,7 @@
 /**
  * Created by tigran on 12/27/16.
  */
-var CMD = require('commander');
+const CMD = require('commander');
 
 CMD.version('0.0.1')
     .usage('[options] <main JSX file> \n\rJSX file should be main entry point for your application for passing properties to it')

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-var express = require('express')
+const express = require('express')
     , bodyParser = require('body-parser')
     , ReactServerDOM = require('react-dom/server')
     , app = express();
@@ -10,7 +10,7 @@ app.set('views', __dirname + '/views');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-var arguments = require('./cmd');
+const arguments = require('./cmd');
 
 // adding babel for requiring JSX files
 require('babel-register')({
@@ -18,16 +18,19 @@ require('babel-register')({
     presets: ['es2015', 'react']
 });
 
+let JSXApp = false;
+
 if(!arguments.watch && arguments.release) {
-    var JSXApp = require(arguments.file).default;
+    JSXApp = require(arguments.file).default;
 }
 
 app.get('/', (req, res) => {
-    if(typeof JSXApp == 'undefined') {
-        var JSXApp = require('./front/app').default;
+    let App = JSXApp;
+    if(App == false) {
+        App = require('./front/app').default;
     }
 
-    let app = new JSXApp({
+    let app = new App({
         path: req.originalUrl
     });
 
