@@ -1,20 +1,34 @@
-const Hapi = require('hapi')
-    , server = new Hapi.Server();
+const express = require('express')
+    , bodyParser = require('body-parser')
+    , ReactServerDOM = require('react-dom/server')
+    , app = express();
 
-server.connection({port: 3000});
+app.set('view engine', 'ejs');
+app.set('views', __dirname + '/views');
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 
-server.route({
-    method: 'GET',
-    path: '/',
-    handler: function (request, replay) {
-        replay('Server working !');
-    }
+// adding babel for requiring JSX files
+require('babel-register')({
+    extensions: ['.jsx'],
+    presets: ['es2015', 'react']
 });
 
-server.start((err) => {
-    if(err) {
-        throw err;
-    }
+const App = require('./front/app').default;
 
-    console.log(`Server running at: ${server.info.uri}`);
+app.get('/', (req, res) => {
+    let app = new App({
+        path: req.originalUrl
+    });
+
+    res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+    res.header('Expires', '-1');
+    res.header('Pragma', 'no-cache');
+    res.render('index', {
+        html: ReactServerDOM.renderToString(app)
+    });
+});
+
+app.listen(3000, function () {
+    console.log('listening on port 3000!')
 });
