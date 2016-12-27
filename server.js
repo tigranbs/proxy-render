@@ -3,14 +3,15 @@
 const express = require('express')
     , bodyParser = require('body-parser')
     , ReactServerDOM = require('react-dom/server')
-    , app = express();
+    , app = express()
+    , fs = require('fs')
+    , path = require('path')
+    , commands = require('./cmd');
 
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
-
-const arguments = require('./cmd');
 
 // adding babel for requiring JSX files
 require('babel-register')({
@@ -18,30 +19,34 @@ require('babel-register')({
     presets: ['es2015', 'react']
 });
 
-let JSXApp = false;
+app.post('/:filename*', (req, res) => {
 
-if(!arguments.watch && arguments.release) {
-    JSXApp = require(arguments.file).default;
-}
+    let file_path = path.resolve(commands.jsx_dir, req.params.filename);
 
-app.get('/', (req, res) => {
-    let App = JSXApp;
-    if(App == false) {
-        App = require('./front/app').default;
-    }
+    // checking if we have a file with given name or not
+    fs.stat(file_path, (err, stat) => {
+        if(err) {
+            res.status(404).send('Request file not found');
+            return;
+        }
 
-    let app = new App({
-        path: req.originalUrl
-    });
+        if(!stat.isFile()) {
+            res.status(500).send('Sent directory path instead of giving JSX file path');
+            return;
+        }
 
-    res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
-    res.header('Expires', '-1');
-    res.header('Pragma', 'no-cache');
-    res.render('index', {
-        html: ReactServerDOM.renderToString(app)
+        let App = require(file_path).default;
+        let app = new App(req.body);
+
+        res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+        res.header('Expires', '-1');
+        res.header('Pragma', 'no-cache');
+        res.render('index', {
+            html: ReactServerDOM.renderToString(app)
+        });
     });
 });
 
-app.listen(arguments.port, function () {
+app.listen(commands.port, function () {
     console.log('listening on port 3000!')
 });
