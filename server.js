@@ -48,10 +48,6 @@ app.post('/:filename*', (req, res) => {
             delete require.cache[file_path];
         }
 
-        res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
-        res.header('Expires', '-1');
-        res.header('Pragma', 'no-cache');
-
         try {
             // sending back rendered HTML file
             res.send(ReactServerDOM.renderToString(app));
