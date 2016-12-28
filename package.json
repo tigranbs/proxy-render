@@ -1,13 +1,12 @@
 {
   "name": "proxy-render",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Serverside rendering Engine for Frontend frameworks",
   "main": "server.js",
   "bin": {
     "pxrender": "server.js"
   },
-  "scripts": {
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tigranbs/proxy-render.git"
