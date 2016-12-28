@@ -14,5 +14,5 @@ module.exports = {
     port: CMD.port,
     release: (CMD.release === true),
     watch: (CMD.watch === true),
-    jsx_dir: CMD.args[0]
+    jsx_dir: CMD.args[0],
 };

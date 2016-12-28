@@ -8,7 +8,6 @@ const express = require('express')
     , path = require('path')
     , commands = require('./cmd');
 
-app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
@@ -19,9 +18,14 @@ require('babel-register')({
     presets: ['es2015', 'react']
 });
 
+let getLogTime = () => {
+    return "[" + (new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1")) + "]";
+};
+
 app.post('/:filename*', (req, res) => {
 
     let file_path = path.resolve(commands.jsx_dir, req.params.filename);
+    let req_time = Date.now();
 
     // checking if we have a file with given name or not
     fs.stat(file_path, (err, stat) => {
@@ -38,12 +42,20 @@ app.post('/:filename*', (req, res) => {
         let App = require(file_path).default;
         let app = new App(req.body);
 
-        res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
-        res.header('Expires', '-1');
-        res.header('Pragma', 'no-cache');
-        res.render('index', {
-            html: ReactServerDOM.renderToString(app)
-        });
+        try {
+            // sending back rendered HTML file
+            res.send(ReactServerDOM.renderToString(app));
+        } catch (e) {
+            res.status(501).end();
+            console.log(getLogTime() , 'error', e.stack);
+            return;
+        }
+
+        if(!commands.release) {
+            console.log(getLogTime()
+                , 'debug'
+                , file_path + " - " + (Date.now() - req_time) + "ms");
+        }
     });
 });
 
