@@ -1,6 +1,6 @@
 {
   "name": "proxy-render",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Serverside rendering Engine for Frontend frameworks",
   "main": "server.js",
   "bin": {
