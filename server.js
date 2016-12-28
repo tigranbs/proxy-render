@@ -15,7 +15,9 @@ app.use(bodyParser.json());
 // adding babel for requiring JSX files
 require('babel-register')({
     extensions: ['.jsx'],
-    presets: ['es2015', 'react']
+    presets: ['es2015', 'react'],
+    // enabling babel-caching if we are in release mode
+    cache: commands.release
 });
 
 let getLogTime = () => {
@@ -41,6 +43,14 @@ app.post('/:filename*', (req, res) => {
 
         let App = require(file_path).default;
         let app = new App(req.body);
+        if(!commands.release) {
+            // clearing require cache for handling file changes
+            delete require.cache[file_path];
+        }
+
+        res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+        res.header('Expires', '-1');
+        res.header('Pragma', 'no-cache');
 
         try {
             // sending back rendered HTML file

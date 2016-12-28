@@ -6,7 +6,7 @@ class App extends React.Component {
     }
 
     render() {
-        return <h1>Test Component !! - {this.props.name}</h1>;
+        return <h1>Test Component, with some change !! - {this.props.name}</h1>;
     }
 }
 
