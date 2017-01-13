@@ -24,7 +24,7 @@ let getLogTime = () => {
     return "[" + (new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1")) + "]";
 };
 
-app.post('/:filename*', (req, res) => {
+app.post('/:filename(*)', (req, res) => {
 
     let file_path = path.resolve(commands.jsx_dir, req.params.filename);
     let req_time = Date.now();
@@ -66,5 +66,5 @@ app.post('/:filename*', (req, res) => {
 });
 
 app.listen(commands.port, function () {
-    console.log('listening on port 3000!')
+    console.log('Proxy Render Running on port ' + commands.port + '!')
 });
