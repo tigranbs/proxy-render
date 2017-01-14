@@ -42,7 +42,7 @@ curl -H "Content-Type: application/json" -X POST -d '{"name":"test request"}' ht
 ```
 
 # Example in Python
-Check out [https://github.com/tigranbs/proxy-render/tree/master/backend-clients/python](Python implementation) of basic `Proxy Render API call`. It is actually a POST request with JSON encoded body as a `React Props` argument.
+Check out [Python implementation](https://github.com/tigranbs/proxy-render/tree/master/backend-clients/python) of basic `Proxy Render API call`. It is actually a POST request with JSON encoded body as a `React Props` argument.
 <br/>
 So now we can just call this Python function from our code and receive rendered HTML from React Templates.
 ```python
