@@ -41,6 +41,17 @@ passed as a `Props` for specified React Component.
 curl -H "Content-Type: application/json" -X POST -d '{"name":"test request"}' http://localhost:3000/app.jsx
 ```
 
+# Example in Python
+Check out [https://github.com/tigranbs/proxy-render/tree/master/backend-clients/python](Python implementation) of basic `Proxy Render API call`. It is actually a POST request with JSON encoded body as a `React Props` argument.
+<br/>
+So now we can just call this Python function from our code and receive rendered HTML from React Templates.
+```python
+raw_html = get_html('app.jsx', {'name': 'test request from Python'})
+print(raw_html)
+```
+
+This helps keep frontend and backend code completely separate and in a different repositories for better code management and technology preference.
+
 # Contribution
 If you fill uncomfortable with API, you have suggestion or you found a bug, 
 feel free to open an issue or send me a pull request, I would love to help.
