@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 
 // adding babel for requiring JSX files
 require('babel-register')({
-    extensions: ['.jsx'],
+    extensions: ['.jsx', '.js'],
     presets: ['es2015', 'react'],
     // enabling babel-caching if we are in release mode
     cache: commands.release
