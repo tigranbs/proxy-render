@@ -10,6 +10,35 @@ const fs = require('fs')
     , render_fn = require('./render');
 
 
+/*
+* Example for config
+* module.exports = {
+*   "view": "views/index",
+*    "view_ending": "ejs",
+*    "target": "http://localhost:3000/api"
+* };
+*
+* module.exports = {
+*   "view": {
+*       "/login": "views/auth/login.ejs"
+*   },
+*    "view_ending": "ejs",
+*    "target": "http://localhost:3000/api"
+* };
+*
+* module.exports = {
+*   "view": {
+*       "/login": {
+*           "name": "views/auth/login.ejs",
+*           "target": "http://localhost:3000/api/login"
+*       }
+*   },
+*    "view_ending": "ejs",
+*    "target": "http://localhost:3000/api"
+* };
+*
+* */
+
 let config_path = path.join(path.resolve("./"), 'proxy_render.config.js');
 
 // Reading configuration file
