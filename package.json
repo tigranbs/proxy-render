@@ -12,8 +12,12 @@
   },
   "author": "Tigran Bayburtsyan",
   "license": "MIT",
+  "homepage": "https://github.com/tigranbs/proxy-render#readme",
   "bugs": {
     "url": "https://github.com/tigranbs/proxy-render/issues"
   },
-  "homepage": "https://github.com/tigranbs/proxy-render#readme"
+  "dependencies": {
+    "express": "^4.15.2",
+    "request": "^2.81.0"
+  }
 }
