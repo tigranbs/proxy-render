@@ -66,7 +66,13 @@ module.exports = function (view_path, render_app, api_target) {
     return function (req, res) {
         targetProxy(req, api_target)
             .then(function (body) {
-                res.render(file_name, {html: renderJSX(render_app, body)});
+                let txt = renderJSX(render_app, body);
+                if(txt) {
+                    res.render(file_name, {html: txt});
+                    return;
+                }
+
+                res.status(500).end();
             })
             .catch(function () {
 
