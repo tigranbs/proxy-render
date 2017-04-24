@@ -4,7 +4,7 @@
   "description": "Serverside rendering Engine for Frontend frameworks",
   "main": "server.js",
   "bin": {
-    "pxrender": "server.js"
+    "proxy-render": "proxy-render.js"
   },
   "scripts": {},
   "repository": {
