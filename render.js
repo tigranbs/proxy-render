@@ -3,7 +3,8 @@
  */
 
 const config = require('./configure').getConfig()
-    , ReactServerDOM = require('react-dom/server');
+    , ReactServerDOM = require('react-dom/server')
+    , request = require('request');
 
 // adding babel for requiring JSX files
 require('babel-register')({
@@ -55,16 +56,13 @@ const renderJSX = (path, props) => {
     return false;
 };
 
-module.exports = {
-    jsx: renderJSX
-};
-
 module.exports = function (view_path, api_target) {
     let file_name = view_path;
     if(typeof view_path === 'object') {
         file_name = view_path.name;
         api_target = (typeof view_path.target === 'undefined' ? api_target : view_path.target );
     }
+
 
     return function (req, res) {
         res.render(file_name, {});

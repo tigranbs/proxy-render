@@ -7,7 +7,13 @@
  * module.exports = {
  *   "view": "views/index",
  *    "view_ending": "ejs",
- *    "target": "http://localhost:3000/api",
+ *    "target": {
+ *       "url": "http://localhost:3000/api",
+ *       "method": "post",
+ *       "headers": {
+ *          "SomeKey": "Some Value"
+ *       }
+ *    },
  *    "debug": true
  * };
  *
