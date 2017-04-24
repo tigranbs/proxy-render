@@ -2,27 +2,16 @@
 
 const express = require('express')
     , bodyParser = require('body-parser')
-    , ReactServerDOM = require('react-dom/server')
     , app = express()
     , fs = require('fs')
     , path = require('path')
-    , commands = require('./cmd');
+    , commands = require('./cmd')
+    , Render = require('./render')
+    , Log = require('./log');
 
 app.set('views', __dirname + '/views');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
-
-// adding babel for requiring JSX files
-require('babel-register')({
-    extensions: ['.jsx', '.js'],
-    presets: ['es2015', 'react'],
-    // enabling babel-caching if we are in release mode
-    cache: commands.release
-});
-
-let getLogTime = () => {
-    return "[" + (new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1")) + "]";
-};
 
 app.post('/:filename(*)', (req, res) => {
 
@@ -33,34 +22,25 @@ app.post('/:filename(*)', (req, res) => {
     fs.stat(file_path, (err, stat) => {
         if(err) {
             res.status(404).send('Request file not found');
+            Log(file_path, "File Not Found!");
             return;
         }
 
         if(!stat.isFile()) {
             res.status(500).send('Sent directory path instead of giving JSX file path');
+            Log(file_path, "Seems this is not a file!");
             return;
         }
 
-        let App = require(file_path).default;
-        let app = new App(req.body);
-        if(!commands.release) {
-            // clearing require cache for handling file changes
-            delete require.cache[file_path];
-        }
-
-        try {
-            // sending back rendered HTML file
-            res.send(ReactServerDOM.renderToString(app));
-        } catch (e) {
-            res.status(501).end();
-            console.log(getLogTime() , 'error', e.stack);
-            return;
+        let txt = Render.jsx(file_path, req.body);
+        if(!txt) {
+            res.status(500).send('Unable to render requested file');
+        } else {
+            res.end(txt);
         }
 
         if(!commands.release) {
-            console.log(getLogTime()
-                , 'debug'
-                , file_path + " - " + (Date.now() - req_time) + "ms");
+            Log(file_path, " - " + (Date.now() - req_time) + "ms");
         }
     });
 });
